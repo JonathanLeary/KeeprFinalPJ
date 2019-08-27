@@ -18,10 +18,10 @@ namespace KeeprFinalPJ.Repositories
     {
       return _db.Query<Vault>("SELECT * FROM vaults;");
     }
-    public Vault GetbyVaultId(string vaultId)
+    public Vault GetbyVaultId(string VaultId)
     {
       string query = "SELECT * FROM vaults WHERE id = @vaultId";
-      return _db.QueryFirstOrDefault<Vault>(query, new { vaultId });
+      return _db.QueryFirstOrDefault<Vault>(query, new { VaultId });
     }
     public Vault CreateVault(Vault Vault)
     {

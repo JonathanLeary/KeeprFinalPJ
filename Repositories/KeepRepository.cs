@@ -2,7 +2,7 @@ using System.Data;
 using System.Collections.Generic;
 using Dapper;
 using KeeprFinalPJ.Models;
-
+using System;
 
 namespace KeeprFinalPJ.Repositories
 {
@@ -24,8 +24,15 @@ namespace KeeprFinalPJ.Repositories
     }
     public Keep GetKeepbyId(int id)
     {
-      string query = "SELECT * FROM vaults WHERE id = @id";
-      return _db.QueryFirstOrDefault<Keep>(query, new { id });
+      try
+      {
+        return _db.QuerySingle<Keep>(@"SELECT * FROM keeps WHERE id = @id", new { id });
+      }
+      catch (Exception e)
+      {
+        throw new ConstraintException(e.Message);
+      }
+
     }
     public Keep CreateKeep(Keep keep)
     {

@@ -19,7 +19,6 @@ namespace KeeprFinalPJ.Controllers
     [HttpGet]
     public ActionResult<IEnumerable<Keep>> Get()
     {
-      var x = new User();
       return Ok(_repo.GetAll());
     }
     [HttpGet("user")]
@@ -32,7 +31,6 @@ namespace KeeprFinalPJ.Controllers
     [HttpGet("{id}")]
     public ActionResult<Keep> GetOne(int id)
     {
-
       return _repo.GetKeepbyId(id);
     }
     [HttpPost]

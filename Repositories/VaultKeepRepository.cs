@@ -2,8 +2,7 @@ using System.Data;
 using System.Collections.Generic;
 using Dapper;
 using KeeprFinalPJ.Models;
-
-
+using System;
 
 namespace KeeprFinalPJ.Repositories
 {
@@ -19,10 +18,16 @@ namespace KeeprFinalPJ.Repositories
     {
       return _db.Query<VaultKeep>("SELECT * FROM vaultkeeps;");
     }
-    public VaultKeep GetbyVaultKeepId(string vaultkeepId)
+    public VaultKeep GetVaultKeepbyVaultId(int VaultId)
     {
-      string query = "SELECT * FROM vaultkeeps WHERE id = @vaultkeepId";
-      return _db.QueryFirstOrDefault<VaultKeep>(query, new { vaultkeepId });
+      try
+      {
+        return _db.QuerySingle<VaultKeep>(@"SELECT * FROM vaultkeeps WHERE id = @VaultId", new { VaultId });
+      }
+      catch (Exception e)
+      {
+        throw new Exception(e.Message);
+      }
     }
     public VaultKeep CreateVaultKeep(VaultKeep VaultKeep)
     {
@@ -31,6 +36,7 @@ namespace KeeprFinalPJ.Repositories
       VALUES ( @CreatorId, @VaultId, @KeepId);
       SELECT LAST_INSERT_ID();
       ", VaultKeep);
+      VaultKeep.Id = id;
       return VaultKeep;
     }
   }

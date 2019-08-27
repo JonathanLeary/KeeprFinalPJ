@@ -16,7 +16,11 @@ let api = Axios.create({
 
 export default new Vuex.Store({
   state: {
-    user: {}
+    user: {},
+    keeps: [],
+    keep: {},
+    vaults: [],
+    vault: {},
   },
   mutations: {
     setUser(state, user) {
@@ -55,6 +59,13 @@ export default new Vuex.Store({
       } catch (e) {
         console.warn(e.message)
       }
+    },
+    getUser({ commit, dispatch }) {
+      api.get("users/")
+        .then(res => {
+          commit("setUsers", res.data)
+        })
     }
+
   }
 })
