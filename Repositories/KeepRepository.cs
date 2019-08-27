@@ -37,10 +37,11 @@ namespace KeeprFinalPJ.Repositories
     public Keep CreateKeep(Keep keep)
     {
       int id = _db.ExecuteScalar<int>(@"
-      INSERT INTO keeps (name, img, description)
-      VALUES (@Name, @Image, @Description);
+      INSERT INTO keeps (name, img, description, userId)
+      VALUES (@Name, @Image, @Description, @UserId);
       SELECT LAST_INSERT_ID();
       ", keep);
+      keep.Id = id;
       return keep;
     }
     public bool RemoveKeep(string keepId)

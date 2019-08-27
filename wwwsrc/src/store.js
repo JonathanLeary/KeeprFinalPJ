@@ -18,9 +18,9 @@ export default new Vuex.Store({
   state: {
     user: {},
     keeps: [],
-    keep: {},
+    activeKeep: {},
     vaults: [],
-    vault: {},
+    activeVault: {},
   },
   mutations: {
     setUser(state, user) {
@@ -29,7 +29,10 @@ export default new Vuex.Store({
     resetState(state) {
       //clear the entire state object of user data
       state.user = {}
-    }
+    },
+    setKeeps(state, keeps) {
+      state.keeps = keeps
+    },
   },
   actions: {
     async register({ commit, dispatch }, creds) {
@@ -60,12 +63,13 @@ export default new Vuex.Store({
         console.warn(e.message)
       }
     },
-    getUser({ commit, dispatch }) {
-      api.get("users/")
+    getKeeps({ commit, dispatch }) {
+      api.get('keeps')
         .then(res => {
-          commit("setUsers", res.data)
+          console.log(res)
+          commit('setKeeps', res.data.data)
         })
+        .catch(e => console.error(e))
     }
-
   }
 })

@@ -18,16 +18,20 @@ namespace KeeprFinalPJ.Controllers
       _repo = repo;
     }
     [Authorize]
+    [HttpGet("{VaultId}")]
+    public ActionResult<IEnumerable<Keep>> GetbyVaultId(int VaultId)
+    {
+      var UserId = HttpContext.User.FindFirstValue("Id");
+      return Ok(_repo.GetbyVaultId(VaultId, UserId));
+    }
+
+
+
     [HttpPost]
     public ActionResult<VaultKeep> Create([FromBody]VaultKeep newVaultKeep)
     {
-      newVaultKeep.CreatorId = HttpContext.User.FindFirstValue("Id");
+      newVaultKeep.UserId = HttpContext.User.FindFirstValue("Id");
       return Ok(_repo.CreateVaultKeep(newVaultKeep));
-    }
-    [HttpGet]
-    public ActionResult<VaultKeep> GetOne(int id)
-    {
-      return _repo.GetVaultKeepbyVaultId(id);
     }
   }
 }

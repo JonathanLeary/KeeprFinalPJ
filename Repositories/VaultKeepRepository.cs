@@ -18,22 +18,20 @@ namespace KeeprFinalPJ.Repositories
     {
       return _db.Query<VaultKeep>("SELECT * FROM vaultkeeps;");
     }
-    public VaultKeep GetVaultKeepbyVaultId(int VaultId)
+    public IEnumerable<Keep> GetbyVaultId(int VaultId, string UserId)
     {
-      try
-      {
-        return _db.QuerySingle<VaultKeep>(@"SELECT * FROM vaultkeeps WHERE id = @VaultId", new { VaultId });
-      }
-      catch (Exception e)
-      {
-        throw new Exception(e.Message);
-      }
+      string query = @"
+      SELECT * FROM vaultkeeps vk
+      INNER JOIN keeps k ON k.id = vk.KeepId
+      WHERE(VaultId = @VaultId AND vk.UserId = @UserId)
+      ";
+      return _db.Query<Keep>(query, new { VaultId, UserId });
     }
     public VaultKeep CreateVaultKeep(VaultKeep VaultKeep)
     {
       int id = _db.ExecuteScalar<int>(@"
       INSERT INTO vaultkeeps (userId, vaultId, keepId )
-      VALUES ( @CreatorId, @VaultId, @KeepId);
+      VALUES ( @UserId, @VaultId, @KeepId);
       SELECT LAST_INSERT_ID();
       ", VaultKeep);
       VaultKeep.Id = id;

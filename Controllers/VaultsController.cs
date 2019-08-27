@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using KeeprFinalPJ.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KeeprFinalPJ.Controllers
 {
@@ -15,22 +16,39 @@ namespace KeeprFinalPJ.Controllers
     {
       _repo = repo;
     }
+
     [HttpGet]
     public ActionResult<IEnumerable<Vault>> Get()
     {
-      var x = new User();
       return Ok(_repo.GetAll());
     }
-    [HttpGet("{id}")]
-    public ActionResult<Vault> GetOne(string id)
+    [HttpGet("user")]
+    public ActionResult<IEnumerable<Vault>> GetAll(string UserId)
     {
-      return _repo.GetbyVaultId(id);
+      UserId = HttpContext.User.FindFirstValue("Id");
+      return Ok(_repo.GetVaultbyCreator(UserId));
+
     }
+
+    [HttpGet("{id}")]
+    public ActionResult<Vault> Get(string id)
+    {
+      try
+      {
+        return Ok(_repo.GetbyVaultId(id));
+      }
+      catch
+      {
+        return BadRequest("Fuck you");
+      }
+    }
+
     [HttpPost]
     public ActionResult<Vault> Create([FromBody]Vault newVault)
     {
       return _repo.CreateVault(newVault);
     }
+
     [HttpDelete("{id}")]
     public ActionResult<Vault> Delete(string Id)
     {
